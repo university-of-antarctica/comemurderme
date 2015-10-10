@@ -1,0 +1,28 @@
+{
+  "name": "comemurderme",
+  "version": "0.0.0",
+  "description": "great app",
+  "main": "index.js",
+  "dependencies": {
+    "async": "^1.4.2",
+    "express": "^4.13.3",
+    "imgur": "^0.1.7",
+    "redis": "^2.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/university-of-antarctica/comemurderme"
+  },
+  "keywords": [
+    "murder"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/university-of-antarctica/comemurderme/issues"
+  }
+}
