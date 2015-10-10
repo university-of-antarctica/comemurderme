@@ -28,8 +28,13 @@
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
     <link rel="stylesheet" type="text/css" href="css/index.css" />
     <title>ComeMurder.Me</title>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.2/jquery.mobile-1.1.2.min.css" />
+    <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.1.2/jquery.mobile-1.1.2.min.js"></script>
     <script type="text/javascript" charset="utf-8">
       //TODO add timeout if function doesn't return in a reasonable amonut of time.
+      //TODO look at efficacy of pageshow function
+
       // example from http://docs.phonegap.com/en/edge/cordova_geolocation_geolocation.md.html
         // Wait for device API libraries to load
         //
@@ -59,20 +64,157 @@
         //
         function onError(error) {
           alert('code: '    + error.code    + '\n' +
-              'message: ' + error.message + '\n');
+            'message: ' + error.message + '\n');
         }
 
-      </script>
-    </head>
-    <body>
-      <div class="app">
-      <h1>PhoneGap</h1>
-      <div id="deviceready" class="blink">
-        <p class="event listening">Connecting to Device</p>
-        <p class="event received">Device is Ready</p>
-        <p id="geolocation">Finding geolocation...</p>
+    </script>
+    <script type="text/javascript" charset="utf-8">
+
+      var pictureSource;   // picture source
+      var destinationType; // sets the format of returned value 
+
+      // Wait for PhoneGap to connect with the device
+      //
+      document.addEventListener("deviceready",onDeviceReady,false);
+
+      // PhoneGap is ready to be used!
+      //
+      function onDeviceReady() {
+          pictureSource=navigator.camera.PictureSourceType;
+          destinationType=navigator.camera.DestinationType;
+      }
+
+      // Called when a photo is successfully retrieved
+      //
+      function onPhotoDataSuccess(imageData) {
+        // Get image handle
+        //
+        var smallImage = document.getElementById('smallImage');
+
+        // Unhide image elements
+        //
+        smallImage.style.display = 'block';
+
+        // Show the captured photo
+        // The inline CSS rules are used to resize the image
+        //
+        smallImage.src = "data:image/jpeg;base64," + imageData;
+
+      }
+      
+    // Called when a photo is successfully retrieved
+      //
+      function onPhotoFileSuccess(imageData) {
+        // Get image handle
+        console.log(JSON.stringify(imageData));
+        
+        // Get image handle
+        //
+        var smallImage = document.getElementById('smallImage');
+
+        // Unhide image elements
+        //
+        smallImage.style.display = 'block';
+
+        // Show the captured photo
+        // The inline CSS rules are used to resize the image
+        //
+        smallImage.src = imageData;
+      }
+
+      // Called when a photo is successfully retrieved
+      //
+      function onPhotoURISuccess(imageURI) {
+        // Uncomment to view the image file URI 
+        // console.log(imageURI);
+
+        // Get image handle
+        //
+        var largeImage = document.getElementById('largeImage');
+
+        // Unhide image elements
+        //
+        largeImage.style.display = 'block';
+
+        // Show the captured photo
+        // The inline CSS rules are used to resize the image
+        //
+        largeImage.src = imageURI;
+      }
+
+      // A button will call this function
+      //
+      function capturePhotoWithData() {
+        // Take picture using device camera and retrieve image as base64-encoded string
+        navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50 });
+      }
+
+      function capturePhotoWithFile() {
+          navigator.camera.getPicture(onPhotoFileSuccess, onFail, { quality: 50, destinationType: Camera.DestinationType.FILE_URI });
+      }
+      
+      // A button will call this function
+      //
+      function getPhoto(source) {
+        // Retrieve image file location from specified source
+        navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50, 
+          destinationType: destinationType.FILE_URI,
+          sourceType: source });
+      }
+
+      // Called if something bad happens.
+      // 
+      function onFail(message) {
+        alert('Failed because: ' + message);
+      }
+
+    </script>
+  </head>
+  <body>
+
+    <div class="app">
+
+      <div id="deviceready">
+
+
+        <div id="one" data-role="page" class="page-content">
+          <br><br>
+          <h1>PhoneGap</h1>
+          <p class="event listening">Connecting to Device</p>
+          <p class="event received">Device is Ready</p>
+          <p id="geolocation">Finding geolocation...</p>
+          <a href="#two" data-role="button" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-theme="c" class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-c"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">Show page two"</span></span></a>
+        </div>
+
+
+        <div id="two" data-role="page" class="page-content">
+          <br><br>
+          <p class="event listening">Connecting to Device</p>
+          <p class="event received">Device is Ready</p> 
+          <button onclick="capturePhotoWithData();">Capture Photo With Image Data</button> <br>
+          <button onclick="capturePhotoWithFile();">Capture Photo With Image File URI</button> <br>
+          <button onclick="getPhoto(pictureSource.PHOTOLIBRARY);">From Photo Library</button><br>
+          <button onclick="getPhoto(pictureSource.SAVEDPHOTOALBUM);">From Photo Album</button><br>
+          <img style="display:none;width:60px;height:60px;" id="smallImage" src="" />
+          <img style="display:none;" id="largeImage" src="" />
+        </div>
+
+
+        <div id="three" data-role="page" class="page-content">
+          <br><br>
+          <h1>PhoneGap</h1>
+          <p class="event listening">Connecting to Device</p>
+          <p class="event received">Device is Ready</p>
+          <p>Add an optional comment </p>
+          <textarea></textarea>
+          <a href="#three" data-role="button" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-theme="c" class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-c"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">Show page "one"</span></span></a>
+        </div>
+
+
       </div>
+
     </div>
+
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript">
