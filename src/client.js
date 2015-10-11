@@ -93,7 +93,7 @@ $(document).ready(function(){
 
   var page = GetPage();
   var todo;
-  if(page === "ui"){
+  if(page === ""){
     todo = function(data){
       CreateUI(JSON.parse(data));
     }
