@@ -53,7 +53,7 @@ var HostCarousel = function(){
 }
 
 var HostUI = function(){
-  app.get("/ui",function(req,res){
+  app.get("/",function(req,res){
     // server_murdlets.ListMurdlets(fid,function(err,murdlets){
     //   var html = GenerateHTML(murdlets);
     //   res.end(html);
@@ -177,12 +177,12 @@ var Listen = function(){
   });
 }
 
-var HostIndex = function(){
-  app.get("/",function(req,res){
-    var url = path_lib.join(__dirname, _root_dir, "index.html")
-    res.sendFile(url);
-  });
-}
+// var HostIndex = function(){
+//   app.get("/",function(req,res){
+//     var url = path_lib.join(__dirname, _root_dir, "index.html")
+//     res.sendFile(url);
+//   });
+// }
 
 var HostBundle = function(){
    app.get("/bundle.js",function(req,res){
@@ -194,7 +194,7 @@ var HostBundle = function(){
 
 
 Listen();
-HostIndex();
+// HostIndex();
 HostBundle();
 HostSubmitMurdlet();
 HostListMurdlets();
