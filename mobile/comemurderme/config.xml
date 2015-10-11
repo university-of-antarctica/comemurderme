@@ -23,6 +23,7 @@
     <preference name="disable-cursor" value="false" />
     <preference name="android-minSdkVersion" value="14" />
     <preference name="android-installLocation" value="auto" />
+    <preference name="AndroidPersistentFileLocation" value="Compatibility" />
     <gap:plugin name="org.apache.cordova.battery-status" />
     <gap:plugin name="org.apache.cordova.camera" />
     <gap:plugin name="org.apache.cordova.media-capture" />
@@ -75,11 +76,17 @@
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
     <platform name="android">
-        <allow-intent href="market:*" />
+      <allow-intent href="market:*" />
     </platform>
     <platform name="ios">
-        <allow-intent href="itms:*" />
-        <allow-intent href="itms-apps:*" />
+      <allow-intent href="itms:*" />
+      <allow-intent href="itms-apps:*" />
     </platform>
     <engine name="android" spec="~4.1.1" />
-</widget>
+      <feature name="File">
+        <param name="ios-package" value="CDVFile" />
+      </feature>
+      <feature name="FileTransfer">
+        <param name="ios-package" value="CDVFileTransfer" />
+      </feature>
+  </widget>
