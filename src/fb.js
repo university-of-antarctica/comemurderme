@@ -68,7 +68,7 @@ var facebooker = function(){
 
   var Connected = function(response){
     SetStatus("You are logged in to Facebook.");
-    LoggedIn();
+    LoggedIn(response);
     // _callback();  Except it is asynchronous, so we call it later down the chain
   }
 
@@ -96,10 +96,11 @@ var facebooker = function(){
 
     // Here we run a very simple test of the Graph API after login is
   // successful.  See statusChangeCallback() for when this call is made.
-  var LoggedIn = function(){
+  var LoggedIn = function(response){
+    _credentials.id = response.authResponse.userID;
     FB.api('/me', function(response) {
       _credentials.name = response.name;
-      _credentials.id = response.id;
+      // _credentials.id = response.id;
       _credentials.logged_in = true;
       _callback();
     });

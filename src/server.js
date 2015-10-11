@@ -30,10 +30,9 @@ var TestImageUpload = function(){
 
 var HostListMurdlets = function(){
   app.get("/list",function(req,res){
-
     var fid = req.query.fid;
     // var fid = "1276098570";
-    // console.log("server got fid " + fid);
+    console.log("server got fid " + fid);
     server_murdlets.ListMurdlets(fid,function(err,murdlets){
       // var html = GenerateHTML(murdlets);
       res.end(JSON.stringify(murdlets));

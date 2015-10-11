@@ -38,7 +38,7 @@ var server_murdlets = function(){
   var ListMurdlets = function(fid,callback){
     console.log("loading for fid " + fid);
     db.Load(fid,function(err,reply){
-      
+
       var user = reply;
       console.log("user: ");
       console.log(user);
@@ -74,7 +74,9 @@ var server_murdlets = function(){
     if(user.murdlets.indexOf(uuid) >= 0){
       console.error("user already had a murdlet with this UUID");
     }
-    user.murdlets.push(uuid);
+    else{
+      user.murdlets.push(uuid);
+    }
   }
 
   var CreateUser = function(){

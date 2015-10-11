@@ -21,7 +21,7 @@ var LoadMurdlets = function(){
   $.ajax(
     {
       url:"/list",
-      data:"fid=1276098570"
+      data:"fid=10205778030951425"
     }
   ).done(function(data){
     // console.log(data);
@@ -39,6 +39,7 @@ $(document).ready(function(){
       AddFacebookLogin();
     }
     else{
+      console.log(facebooker.GetID());
       LoadMurdlets();
     }
   });
