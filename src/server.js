@@ -2,8 +2,13 @@ var express = require('express'),
     app = express(),
     path = require('path'),
     Murdlets = require('./server-murdlets.js'),
-    server_murdlets = new Murdlets();
-    imgur = require('imgur');
+    server_murdlets = new Murdlets(),
+    imgur = require('imgur'),
+    bodyParser = require('body-parser'),
+    busboy = require('connect-busboy'),
+    multiparty = require('connect-multiparty');
+
+    app.use(busboy());
 
 var _port = 8289;
 var _root_dir = "../"
@@ -107,7 +112,45 @@ var GenerateHTML = function(murdlets){
 //     res.end(html);
 //   });
 // }
+var HostUpload = function(){
+  var multipartMiddleware = multiparty();
 
+   // var my_parser = bodyParser.raw(
+   //    {
+   //      // extended: false,
+   //      // limit: "2mb"
+   //    }
+   //  );  
+   app.post("/images",multipartMiddleware,function(req,res){
+     console.log(req.body); 
+     console.log("POST");
+     console.log(req.files);
+     
+     res.end("POST REQUEST");
+    // var url = path.join(__dirname, _root_dir, "index.html")
+    // res.sendFile(url);
+  });
+  app.get("/images",function(req,res){
+     console.log(req.query);
+     console.log("GET");
+     res.end("GET");
+    // var url = path.join(__dirname, _root_dir, "index.html")
+    // res.sendFile(url);
+  });
+
+
+  // app.use(function(req, res) {
+  //   req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+  //     // ... 
+  //   });
+  //   req.busboy.on('field', function(key, value, keyTruncated, valueTruncated) {
+  //     // ... 
+  //   });
+  //   req.pipe(req.busboy);
+  //   // etc ... 
+  // });
+
+}
 
 var Listen = function(){
   app.listen(_port, function() {
@@ -138,4 +181,5 @@ HostSubmitMurdlet();
 HostListMurdlets();
 HostUI();
 HostCarousel();
-// HostMurdlet();
+HostUpload();
+// HostMurdlet(); 
