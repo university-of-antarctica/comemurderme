@@ -40,6 +40,13 @@ var HostListMurdlets = function(){
   })
 }
 
+var HostCarousel = function(){
+   app.get("/carousel",function(req,res){
+    var url = path.join(__dirname, _root_dir,"index.html")
+    res.sendFile(url);
+  })
+}
+
 var HostUI = function(){
   app.get("/ui",function(req,res){
     // server_murdlets.ListMurdlets(fid,function(err,murdlets){
@@ -121,7 +128,7 @@ var HostBundle = function(){
     res.sendFile(url);
   });
 }
-TestImageUpload();
+// TestImageUpload();
 
 
 Listen();
@@ -130,4 +137,5 @@ HostBundle();
 HostSubmitMurdlet();
 HostListMurdlets();
 HostUI();
+HostCarousel();
 // HostMurdlet();
