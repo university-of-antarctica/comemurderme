@@ -68,7 +68,7 @@ var facebooker = function(){
 
   var Connected = function(response){
     SetStatus("You are logged in to Facebook.");
-    LoggedIn();
+    LoggedIn(response);
     // _callback();  Except it is asynchronous, so we call it later down the chain
   }
 
@@ -96,10 +96,11 @@ var facebooker = function(){
 
     // Here we run a very simple test of the Graph API after login is
   // successful.  See statusChangeCallback() for when this call is made.
-  var LoggedIn = function(){
+  var LoggedIn = function(response){
+    _credentials.id = response.authResponse.userID;
     FB.api('/me', function(response) {
       _credentials.name = response.name;
-      _credentials.id = response.id;
+      // _credentials.id = response.id;
       _credentials.logged_in = true;
       _callback();
     });
@@ -131,6 +132,16 @@ var facebooker = function(){
     }
   }
 
+  var GetName = function(){
+    if(_credentials.logged_in){
+      return _credentials.name;
+    }
+    else{
+      console.error("trying to get name of someone not logged in to facebook");
+      return undefined;
+    }
+  }
+
   var IsLoggedIn = function(){
     return _credentials.logged_in;
   }
@@ -158,6 +169,7 @@ var facebooker = function(){
   this.BuildButton = BuildButton;
   this.BuildStatusDiv = BuildStatusDiv;
   this.GetID = GetID;
+  this.GetName = GetName;
   this.GetProfilePicture = GetProfilePicture;
   this.IsLoggedIn = IsLoggedIn;
 

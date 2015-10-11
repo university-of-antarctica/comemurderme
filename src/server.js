@@ -1,20 +1,25 @@
 var express = require('express'),
     app = express(),
-    path = require('path'),
+    path_lib = require('path'),
     Murdlets = require('./server-murdlets.js'),
-    server_murdlets = new Murdlets();
-    imgur = require('imgur');
+    server_murdlets = new Murdlets(),
+    imgur = require('imgur'),
+    multiparty = require('connect-multiparty'),
+    base64_lib = require('node-base64-image');
+    // app.use(busboy());
 
 var _port = 8289;
 var _root_dir = "../"
 
-var UploadImage = function(base64){
+var UploadImage = function(base64, callback){
   imgur.uploadBase64(base64)
     .then(function(json){
-      console.log(json.data.link);
+      callback(null,json.data.link);
+      // console.log(json.data.link);
     })
     .catch(function(err){
       console.error(err.message);
+      callback(err,null);
     });
 }
 
@@ -31,10 +36,19 @@ var TestImageUpload = function(){
 var HostListMurdlets = function(){
   app.get("/list",function(req,res){
     var fid = req.query.fid;
+    // var fid = "1276098570";
+    console.log("server got fid " + fid);
     server_murdlets.ListMurdlets(fid,function(err,murdlets){
       // var html = GenerateHTML(murdlets);
       res.end(JSON.stringify(murdlets));
     });
+  })
+}
+
+var HostCarousel = function(){
+   app.get("/carousel",function(req,res){
+    var url = path_lib.join(__dirname, _root_dir,"index.html")
+    res.sendFile(url);
   })
 }
 
@@ -44,7 +58,7 @@ var HostUI = function(){
     //   var html = GenerateHTML(murdlets);
     //   res.end(html);
     // });
-    var url = path.join(__dirname, _root_dir,"index.html")
+    var url = path_lib.join(__dirname, _root_dir,"index.html")
 
     res.sendFile(url);
   })
@@ -98,7 +112,64 @@ var GenerateHTML = function(murdlets){
 //     res.end(html);
 //   });
 // }
+// var path = "/tmp/KfCnASKVVX5jmlq-MUn8cfDm.jpg"
 
+
+var ConvertJPegToURL = function(path, callback){
+  ConvertToBase64(path,function(err, image){
+    if(err)console.error(err);
+    UploadImage(image, callback);
+  });
+}
+
+var ConvertToBase64 = function(path, callback){
+  var options = {localFile: true, string: true};
+   base64_lib.base64encoder(
+     path,
+     options,
+     callback
+   )
+}
+var HostUpload = function(){
+  var multipartMiddleware = multiparty();
+ 
+   app.post("/images",multipartMiddleware,function(req,res){
+     console.log(req.body); 
+     console.log("POST");
+     console.log(req.files);
+
+     var path = req.files.file.path;
+
+
+     console.log(req.body);
+     
+     var fid = req.body.userfbid;//"10205778030951425";
+     if(!fid) fid = "123";
+     var uuid = new Date().valueOf();
+     var datetime = req.body.userdatetime;//"1/1/1/1/";
+     if(!datetime) datetime= new Date().toLocaleString();
+     var comment=req.body.usercomment;//"HELLO THERE"
+     if(!comment) comment = "default comment";
+     var location = JSON.parse(req.body.userlocation);//"-57.123,13.13";
+     if(!location) location = JSON.stringify({"lat": "35.9025935", "lng":'-79.0745011'});
+     var latlng = location.lat + "," + location.lng;
+
+     ConvertJPegToURL(path, function(err, url){
+       if(err) console.error(err);
+       var murdlet = server_murdlets.CreateMurdlet(fid,uuid,datetime,comment,url,latlng)
+       server_murdlets.SubmitMurdlet(murdlet);
+     })
+
+
+
+     
+     
+     res.end("POST REQUEST");
+    // var url = path.join(__dirname, _root_dir, "index.html")
+    // res.sendFile(url);
+  });
+
+}
 
 var Listen = function(){
   app.listen(_port, function() {
@@ -108,18 +179,18 @@ var Listen = function(){
 
 var HostIndex = function(){
   app.get("/",function(req,res){
-    var url = path.join(__dirname, _root_dir, "index.html")
+    var url = path_lib.join(__dirname, _root_dir, "index.html")
     res.sendFile(url);
   });
 }
 
 var HostBundle = function(){
    app.get("/bundle.js",function(req,res){
-    var url = path.join(__dirname, _root_dir,"build/bundle.js")
+    var url = path_lib.join(__dirname, _root_dir,"build/bundle.js")
     res.sendFile(url);
   });
 }
-TestImageUpload();
+// TestImageUpload();
 
 
 Listen();
@@ -128,4 +199,6 @@ HostBundle();
 HostSubmitMurdlet();
 HostListMurdlets();
 HostUI();
-// HostMurdlet();
+HostCarousel();
+HostUpload();
+// HostMurdlet(); 
