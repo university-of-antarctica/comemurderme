@@ -36,8 +36,9 @@ var server_murdlets = function(){
   }
 
   var ListMurdlets = function(fid,callback){
+    console.log("loading for fid " + fid);
     db.Load(fid,function(err,reply){
-
+      
       var user = reply;
       console.log("user: ");
       console.log(user);

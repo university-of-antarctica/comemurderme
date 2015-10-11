@@ -131,6 +131,16 @@ var facebooker = function(){
     }
   }
 
+  var GetName = function(){
+    if(_credentials.logged_in){
+      return _credentials.name;
+    }
+    else{
+      console.error("trying to get name of someone not logged in to facebook");
+      return undefined;
+    }
+  }
+
   var IsLoggedIn = function(){
     return _credentials.logged_in;
   }
@@ -158,6 +168,7 @@ var facebooker = function(){
   this.BuildButton = BuildButton;
   this.BuildStatusDiv = BuildStatusDiv;
   this.GetID = GetID;
+  this.GetName = GetName;
   this.GetProfilePicture = GetProfilePicture;
   this.IsLoggedIn = IsLoggedIn;
 
