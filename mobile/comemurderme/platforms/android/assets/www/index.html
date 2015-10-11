@@ -33,6 +33,8 @@
     <script src="http://code.jquery.com/mobile/1.1.2/jquery.mobile-1.1.2.min.js"></script>
     <script type="text/javascript" charset="utf-8">
       //TODO add timeout if function doesn't return in a reasonable amonut of time.
+      //TODO look at efficacy of pageshow function
+
       // example from http://docs.phonegap.com/en/edge/cordova_geolocation_geolocation.md.html
         // Wait for device API libraries to load
         //
@@ -66,53 +68,246 @@
         }
 
     </script>
+    <script type="text/javascript" charset="utf-8">
+
+      var pictureSource;   // picture source
+      var destinationType; // sets the format of returned value 
+
+      // Wait for PhoneGap to connect with the device
+      //
+      document.addEventListener("deviceready",onDeviceReady,false);
+
+      // PhoneGap is ready to be used!
+      //
+      function onDeviceReady() {
+          pictureSource=navigator.camera.PictureSourceType;
+          destinationType=navigator.camera.DestinationType;
+      }
+
+      // Called when a photo is successfully retrieved
+      //
+      function onPhotoDataSuccess(imageData) {
+        // Get image handle
+        //
+        var smallImage = document.getElementById('smallImage');
+
+        // Unhide image elements
+        //
+        smallImage.style.display = 'block';
+
+        // Show the captured photo
+        // The inline CSS rules are used to resize the image
+        //
+        smallImage.src = "data:image/jpeg;base64," + imageData;
+
+      }
+      
+    // Called when a photo is successfully retrieved
+      //
+      function onPhotoFileSuccess(imageData) {
+        // Get image handle
+        console.log(JSON.stringify(imageData));
+        
+        // Get image handle
+        //
+        var smallImage = document.getElementById('smallImage');
+
+        // Unhide image elements
+        //
+        smallImage.style.display = 'block';
+
+        // Show the captured photo
+        // The inline CSS rules are used to resize the image
+        //
+        smallImage.src = imageData;
+      }
+
+      // Called when a photo is successfully retrieved
+      //
+      function onPhotoURISuccess(imageURI) {
+        // Uncomment to view the image file URI 
+        // console.log(imageURI);
+
+        // Get image handle
+        //
+        var largeImage = document.getElementById('largeImage');
+
+        // Unhide image elements
+        //
+        largeImage.style.display = 'block';
+
+        // Show the captured photo
+        // The inline CSS rules are used to resize the image
+        //
+        largeImage.src = imageURI;
+      }
+
+      // A button will call this function
+      //
+      function capturePhotoWithData() {
+        // Take picture using device camera and retrieve image as base64-encoded string
+        navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50 });
+      }
+
+      function capturePhotoWithFile() {
+          navigator.camera.getPicture(onPhotoFileSuccess, onFail, { quality: 50, destinationType: Camera.DestinationType.FILE_URI });
+      }
+      
+      // A button will call this function
+      //
+      function getPhoto(source) {
+        // Retrieve image file location from specified source
+        navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50, 
+          destinationType: destinationType.FILE_URI,
+          sourceType: source });
+      }
+
+      // Called if something bad happens.
+      // 
+      function onFail(message) {
+        alert('Failed because: ' + message);
+      }
+
+    </script>
+    <script src="openfb.js"></script>
+    <script>
+
+         // Defaults to sessionStorage for storing the Facebook token
+         openFB.init({appId: '740619572749259'});
+
+        //  Uncomment the line below to store the Facebook token in localStorage instead of sessionStorage
+        //  openFB.init({appId: 'YOUR_FB_APP_ID', tokenStore: window.localStorage});
+
+        function login() {
+            openFB.login(
+                    function(response) {
+                        if(response.status === 'connected') {
+                            alert('Facebook login succeeded, got access token: ' + response.authResponse.accessToken);
+                        } else {
+                            alert('Facebook login failed: ' + response.error);
+                        }
+                    }, {scope: 'email'});
+        }
+
+        function getInfo() {
+            openFB.api({
+                path: '/me',
+                success: function(data) {
+                    console.log(JSON.stringify(data));
+                    document.getElementById("userName").innerHTML = data.name;
+                    document.getElementById("userPic").src = 'http://graph.facebook.com/' + data.id + '/picture?type=small';
+                },
+                error: errorHandler});
+        }
+
+        function readPermissions() {
+            openFB.api({
+                method: 'GET',
+                path: '/me/permissions',
+                success: function(result) {
+                    alert(JSON.stringify(result.data));
+                },
+                error: errorHandler
+            });
+        }
+
+        function revoke() {
+            openFB.revokePermissions(
+                    function() {
+                        alert('Permissions revoked');
+                    },
+                    errorHandler);
+        }
+
+        function logout() {
+            openFB.logout(
+                    function() {
+                        alert('Logout successful');
+                    },
+                    errorHandler);
+        }
+
+        function errorHandler(error) {
+            alert(error.message);
+        }
+
+  </script>
+
   </head>
   <body>
 
     <div class="app">
 
-
-
-
       <div id="deviceready">
+
 
         <div id="one" data-role="page" class="page-content">
           <br><br>
-            <h1>PhoneGap</h1>
-            <p class="event listening">Connecting to Device</p>
-            <p class="event received">Device is Ready</p>
-            <p id="geolocation">Finding geolocation...</p>
-            <a href="#two" data-role="button" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-theme="c" class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-c"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">Show page two"</span></span></a>
+          <h1>PhoneGap</h1>
+          <p class="event listening">Connecting to Device</p>
+          <p class="event received">Device is Ready</p>
+          <p id="geolocation">Finding geolocation...</p>
+          <a href="#two" data-role="button" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-theme="c" class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-c"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">Show page two"</span></span></a>
         </div>
-
 
         <div id="two" data-role="page" class="page-content">
+        <!-- TODO https://developers.facebook.com/docs/facebook-login/permissions/v2.5 -->
           <br><br>
-            <h1>PhoneGap</h1>
-            <p class="event listening">Connecting to Device</p>
-            <p class="event received">Device is Ready</p>
-            <p>Hello page two</p>
-            <p id="geolocation">Finding geolocation...</p>
-            <a href="#one" data-role="button" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-theme="c" class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-c"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">Show page "one"</span></span></a>
+          <h1>PhoneGap</h1>
+          <p class="event listening">Connecting to Device</p>
+          <p class="event received">Device is Ready</p>
+          <button class="btn btn-block" onclick="login()">Login with Facebook</button>
+          <hr/>
+
+          <button class="btn btn-block" onclick="getInfo()">Get My Info</button>
+          <p>Name: <span id="userName"></span></p>
+          <img id="userPic"/>
+          <hr/>
+
+          <p>Complete Facebook Logout. After logging out, you'll have to login again and provide your Facebook credentials.</p>
+          <button class="btn btn-block" onclick="logout()">Logout</button>
+          <hr/>
+
+          <button class="btn btn-block" onclick="readPermissions()">Read Permissions</button>
+
+          <p>Revoke App Permissions. After revoking permissions, you'll have to grant permissions again when logging in.</p>
+          <button class="btn btn-block" onclick="revoke()">Revoke Permissions</button>
+          <a href="#three" data-role="button" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-theme="c" class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-c"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">Show page two"</span></span></a>
         </div>
-        <script type="text/javascript" charset="utf-8">
-          $("#two").on("pageshow" , function() {
-            console.log("page two!");
-            navigator.geolocation.getCurrentPosition(onSuccess, onError);
+
+
+        <div id="three" data-role="page" class="page-content">
+          <br><br>
+          <p class="event listening">Connecting to Device</p>
+          <p class="event received">Device is Ready</p> 
+          <button onclick="capturePhotoWithData();">Capture Photo With Image Data</button> <br>
+          <button onclick="capturePhotoWithFile();">Capture Photo With Image File URI</button> <br>
+          <button onclick="getPhoto(pictureSource.PHOTOLIBRARY);">From Photo Library</button><br>
+          <button onclick="getPhoto(pictureSource.SAVEDPHOTOALBUM);">From Photo Album</button><br>
+          <img style="display:none;width:60px;height:60px;" id="smallImage" src="" />
+          <img style="display:none;" id="largeImage" src="" />
+        </div>
+        <!--
+        $("#page_id").on("pageshow" , function() {
+          showMap();
           });
-        </script>
+        -->
 
-
-
-
-
+        <div id="four" data-role="page" class="page-content">
+          <br><br>
+          <h1>PhoneGap</h1>
+          <p class="event listening">Connecting to Device</p>
+          <p class="event received">Device is Ready</p>
+          <p>Add an optional comment </p>
+          <textarea></textarea>
+          <a href="#three" data-role="button" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-theme="c" class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-c"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">Show page "one"</span></span></a>
+        </div>
 
 
       </div>
 
-
-
     </div>
+
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript">
