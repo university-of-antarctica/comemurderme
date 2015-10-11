@@ -4,6 +4,7 @@ var facebooker = function(){
   var _test_id = '740623989415484';
 
   var _text_status = "";
+  var _callback = function(){};
 
   var _credentials = {
     logged_in:false,
@@ -12,8 +13,9 @@ var facebooker = function(){
   };
 
 
-  function Setup(){
+  function Setup(callback){
     SetCallback(_test_id);
+    _callback = callback;
     LoadSDK();
   }
 
@@ -67,11 +69,13 @@ var facebooker = function(){
   var Connected = function(response){
     SetStatus("You are logged in to Facebook.");
     LoggedIn();
+    // _callback();  Except it is asynchronous, so we call it later down the chain
   }
 
   var NotAuthorized = function(){
     // The person is logged into Facebook, but not your app.
     SetStatus('Please log into this app.');
+    _callback();
   }
 
   var NotLoggedIn = function(){
@@ -79,6 +83,7 @@ var facebooker = function(){
     // they are logged into this app or not.
     SetStatus('Log into Facebook.');
     LoggedOut();
+    _callback();
   }
 
   var SetStatus = function(status){
@@ -96,6 +101,7 @@ var facebooker = function(){
       _credentials.name = response.name;
       _credentials.id = response.id;
       _credentials.logged_in = true;
+      _callback();
     });
   }
 
@@ -117,7 +123,7 @@ var facebooker = function(){
   
   function GetID(){
     if(_credentials.logged_in){
-      return self.id;
+      return _credentials.id;
     }
     else{
       console.error("trying to get ID of someone not logged in to facebook");
@@ -125,12 +131,16 @@ var facebooker = function(){
     }
   }
 
+  var IsLoggedIn = function(){
+    return _credentials.logged_in;
+  }
+
   var BuildButton = function(){
     var $btn = $('<fb:login-button>')
       .attr('scope',"public_profile,email")
       .attr('size','large')
       // convert this to a log out button if they are logged in
-      .attr('data-auto-logout-link','true') 
+      // .attr('data-auto-logout-link','true') 
       .attr('onlogin','CheckLoginState');
       window.CheckLoginState = CheckLoginState;
     return $btn;
@@ -149,6 +159,7 @@ var facebooker = function(){
   this.BuildStatusDiv = BuildStatusDiv;
   this.GetID = GetID;
   this.GetProfilePicture = GetProfilePicture;
+  this.IsLoggedIn = IsLoggedIn;
 
 }
 
