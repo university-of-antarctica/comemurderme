@@ -1,16 +1,17 @@
-var murdlet = function(){
+var server_murdlets = function(){
   var DB = require("./db.js"),
     db = new DB(),
     async = require('async');
 
   // Local Murdlet Operations ///////////////////////////////
 
-  var CreateMurdlet = function(fid,uuid,time,comment){
+  var CreateMurdlet = function(fid,uuid,time,comment, image_url){
     var murdlet = {
       fid:fid,
       uuid:uuid,
       time: time,
-      comment: comment
+      comment: comment,
+      image_url: image_url
     };
     return murdlet;
   }
@@ -85,4 +86,4 @@ var murdlet = function(){
 
 
 }
-module.exports = murdlet;
+module.exports = server_murdlets;
