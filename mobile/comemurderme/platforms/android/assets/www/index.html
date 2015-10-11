@@ -227,12 +227,9 @@
           console.log("failed because: " + message);
           alert('Failed because: ' + message);
         }
-        var serverURL = "http://192.168.1.7:8289"
+        var serverURL = "http://comemurder.me:8289"
 
           upload = function (imageURI) {
-            console.log("comment: " + window.userComment);
-            
-            console.log("UPLOAD FTW");
               var ft = new FileTransfer(),
                 options = new FileUploadOptions();
 
@@ -339,7 +336,7 @@ $(document).on('pagecreate', function() {
 
         <div id="one" data-role="page" class="page-content">
           <br><br>
-          <h1>PhoneGap</h1>
+          <h1>ComeMurder.me</h1>
           <p class="event listening">Connecting to Device</p>
           <p class="event received">Device is Ready</p>
           <p id="geolocation">Finding geolocation...</p>
@@ -349,7 +346,7 @@ $(document).on('pagecreate', function() {
         <div id="two" data-role="page" class="page-content">
           <!-- TODO https://developers.facebook.com/docs/facebook-login/permissions/v2.5 -->
           <br><br>
-          <h1>PhoneGap</h1>
+          <h1>ComeMurder.me</h1>
           <button class="btn btn-block" onclick="login()">Login with Facebook</button>
           <hr/>
           <button class="btn btn-block" onclick="getInfo()">Get My Info</button>
@@ -372,7 +369,7 @@ $(document).on('pagecreate', function() {
 
         <div id="three" data-role="page" class="page-content">
           <br><br>
-          <h1>PhoneGap</h1>
+          <h1>ComeMurder.me</h1>
           <p>Add an optional comment </p>
           <textarea id="usertextarea" maxlength="140"></textarea>
           <a href="#four" data-role="button" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-theme="c" class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-c"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">Next</span></span></a>
@@ -380,6 +377,8 @@ $(document).on('pagecreate', function() {
 
         <div id="four" data-role="page" class="page-content">
           <br><br>
+	  <h1>ComeMurder.me</h1>
+	  <br>
           <button onclick="capturePhotoWithData();">Capture Photo With Image Data</button> <br>
           <!-- button onclick="capturePhotoWithFile();">Capture Photo With Image File URI</button> <br> 
           //TODO take out the corresponding function here.-->
