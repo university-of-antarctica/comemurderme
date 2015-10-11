@@ -53,12 +53,18 @@ start it up, and in the prompt for server enter in the ip:port combo from the
 #### How to use the application
 As this is the earliest possible release, once you get the phonegap
 server running you have to navigate the application in a particular manner.
-The first page loads your GPS coordinates, let them load, and then hit next.
-The second page is the facebook login, click "Login with Facebook"
-
-### Getting your own comemurder.me server running on localhost
-
-
+The first page loads your GPS coordinates, let them load, and then click "Next".
+The second page is the facebook login, click "Login with Facebook" and enter
+in your facebook user id and password, don't worry, we could barely get those
+loaded and this is actually phonegap using an in-app browser (all we get back
+is an OAuth token temporarily). When you are done logging in you will be redirected
+back to the second page, YOU MUST CLICK "Get My Info", hey, the worlds not perfect,
+sometimes JS won't just DO things. Then click "Next". On the third page enter
+in an optional comment and then click "Next". Finally click the button
+"Capture Photo With Image Data", snap a photo and then click "Save" or "Use Photo".
+At this point your "murdlet" has been submitted. Clicking "Next" brings you back
+to the first page. Now go to comemurder.me:8289/carousel on your phone or computer to see it 
+displayed.
 
 ### Challenges
 1. This application required that the mobile application and the server side code
