@@ -8,13 +8,13 @@ var facebooker = function(){
 
   var _credentials = {
     logged_in:false,
-    name:"",
+    name:"", 
     id:""
   };
 
 
   function Setup(callback){
-    SetCallback(_app_id);
+    SetCallback(_test_id);
     _callback = callback;
     LoadSDK();
   }
