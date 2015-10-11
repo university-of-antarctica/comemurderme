@@ -5,13 +5,14 @@ var server_murdlets = function(){
 
   // Local Murdlet Operations ///////////////////////////////
 
-  var CreateMurdlet = function(fid,uuid,time,comment, image_url){
+  var CreateMurdlet = function(fid,uuid,time,comment, image_url, latlng){
     var murdlet = {
       fid:fid,
       uuid:uuid,
       time: time,
       comment: comment,
-      image_url: image_url
+      image_url: image_url,
+      latlng: latlng
     };
     return murdlet;
   }
@@ -69,6 +70,9 @@ var server_murdlets = function(){
   // Boring Local Murdlet stuff //////////////////////////////////
 
   var AddMurdletToUser = function(user,uuid){
+    if(user.murdlets.indexOf(uuid) >= 0){
+      console.error("user already had a murdlet with this UUID");
+    }
     user.murdlets.push(uuid);
   }
 

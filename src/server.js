@@ -2,7 +2,7 @@ var express = require('express'),
     app = express(),
     path = require('path'),
     Murdlets = require('./server-murdlets.js'),
-    murdlets = new Murdlets();
+    server_murdlets = new Murdlets();
     imgur = require('imgur');
 
 var _port = 8289;
@@ -28,12 +28,25 @@ var TestImageUpload = function(){
 // Hosting API for murdlets /////////////////////////////
 
 
-var HostListMurdlets = function(fid){
+var HostListMurdlets = function(){
   app.get("/list",function(req,res){
     var fid = req.query.fid;
-    murdlets.ListMurdlets(fid,function(err,murdlets){
+    server_murdlets.ListMurdlets(fid,function(err,murdlets){
+      // var html = GenerateHTML(murdlets);
       res.end(JSON.stringify(murdlets));
     });
+  })
+}
+
+var HostUI = function(){
+  app.get("/ui",function(req,res){
+    // server_murdlets.ListMurdlets(fid,function(err,murdlets){
+    //   var html = GenerateHTML(murdlets);
+    //   res.end(html);
+    // });
+    var url = path.join(__dirname, _root_dir,"index.html")
+
+    res.sendFile(url);
   })
 }
 
@@ -43,8 +56,10 @@ var HostSubmitMurdlet = function(){
      var uuid = req.query.uuid;
      var time = req.query.time;
      var comment = req.query.comment;
-     var murdlet = murdlets.CreateMurdlet(fid,uuid,time,comment);
-     murdlets.SubmitMurdlet(murdlet);
+     var image_url = req.query.image_url;
+     var latlng = req.query.latlng;
+     var murdlet = server_murdlets.CreateMurdlet(fid,uuid,time,comment,image_url,latlng);
+     server_murdlets.SubmitMurdlet(murdlet);
      res.end("murdlet submitted");
   });
 }
@@ -52,6 +67,16 @@ var HostSubmitMurdlet = function(){
 
 //////////////////////////////////////////////////////////////////
 
+// hacky (hackathon!)
+var GenerateHTML = function(murdlets){
+  var html = '<!DOCTYPE html> <meta charset="utf-8">'
+  html += ' <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>'
+  html += '<script src ="bundle.js"> </script>';
+ html += '<script>$(document).ready(function(){ CreatePage(' + JSON.stringify(murdlets) + ');});</script>';
+  html +=' <body>   Hey There </body>';
+  return html;
+}
+// var GenerateMurdlets = function(murdlet)
 
 
 
@@ -59,6 +84,20 @@ var HostSubmitMurdlet = function(){
 
 
 // Page Hosting ///////////////////////////////////////////////////
+
+// user goes to a page with their fid in the req.query
+// they get served a page that will use the client-murdlets to draw a page once it gets hold of a murdlet's string representation
+
+// var HostMurdlet = function(){
+//   app.get("/murdlet",function(req,res){
+//     var fid = req.query.fid;
+
+//     var html = GenerateHTML();
+//     // var url = path.join(__dirname, _root_dir, "index.html")
+//     // res.sendFile(url);
+//     res.end(html);
+//   });
+// }
 
 
 var Listen = function(){
@@ -88,3 +127,5 @@ HostIndex();
 HostBundle();
 HostSubmitMurdlet();
 HostListMurdlets();
+HostUI();
+// HostMurdlet();
