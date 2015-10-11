@@ -150,8 +150,9 @@ var HostUpload = function(){
      if(!datetime) datetime= new Date().toLocaleString();
      var comment=req.body.usercomment;//"HELLO THERE"
      if(!comment) comment = "default comment";
-     var location = JSON.parse(req.body.userlocation);//"-57.123,13.13";
-     if(!location) location = JSON.stringify({"lat": "35.9025935", "lng":'-79.0745011'});
+     var userlocation = req.body.userlocation;
+     if(!req.body.userlocation) userlocation = JSON.stringify({"lat": "35.9025935", "lng":'-79.0745011'});
+     var location = JSON.parse(userlocation);//"-57.123,13.13";
      var latlng = location.lat + "," + location.lng;
 
      ConvertJPegToURL(path, function(err, url){

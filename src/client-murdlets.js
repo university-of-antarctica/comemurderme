@@ -3,38 +3,43 @@ var client_murdlets = function(facebooker){
   var google_maps = new GM();
 
   var BuildPage = function(murdlet){
-    return $("<div>")
-      .attr("class","well")
-      .width("580px")
-      .css("background-color","#181818")
-      .css("color","#800000")
-      // .attr("class","col-md-12")
-      // .css("height","500px")
-      .css("border-style","outset")
-      .css("border-color","grey")
-      .append(
-        BuildHeader(facebooker.GetName(),murdlet.time)
-      )
-      .append(
-        $("<div>")
-          .height("400px")
-          .append(
-            BuildImage(murdlet.image_url)
-              // .css("float","left")
-              .attr("class","col-xs-6")
-          )
-          .append(
-            $("<div>")
-              .attr("class","col-xs-6")
-              .append(
-                BuildLocationMap(murdlet.latlng)
-                  // .css("float","left")
-              )
-              .append($("<br>"))
-              .append(
-                BuildCommentBox(murdlet.fid, murdlet.comment))
-                  .attr("class","col-xs-6")
-              )
+    return $("<span>")
+    .css("display","inline-block")
+    .css("margin", "15px")
+    .append(
+      $("<div>")
+        .attr("class","well")
+        .width("580px")
+        .css("background-color","#181818")
+        .css("color","#800000")
+        // .attr("class","col-md-12")
+        // .css("height","500px")
+        .css("border-style","outset")
+        .css("border-color","grey")
+        .append(
+          BuildHeader(facebooker.GetName(),murdlet.time)
+        )
+        .append(
+          $("<div>")
+            .height("400px")
+            .append(
+              BuildImage(murdlet.image_url)
+                // .css("float","left")
+                .attr("class","col-xs-6")
+            )
+            .append(
+              $("<div>")
+                .attr("class","col-xs-6")
+                .append(
+                  BuildLocationMap(murdlet.latlng)
+                    // .css("float","left")
+                )
+                .append($("<br>"))
+                .append(
+                  BuildCommentBox(murdlet.fid, murdlet.comment))
+                    .attr("class","col-xs-6")
+                )
+        )
       )
       // .append($("<div class=clearfix>"))
       // .append(BuildCommentBox(murdlet.fid, murdlet.comment));
