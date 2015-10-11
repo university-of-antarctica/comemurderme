@@ -47,10 +47,12 @@
           navigator.geolocation.getCurrentPosition(onSuccess, onError);
           window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
           //POST variables for options.params in upload()
-          var userDateTime, userFbId, userUuid, userLocation, userComment;
+          window.userDateTime;
+          window.userFbId;
+          window.userLocation;
+          window.userComment;
           var dateObj = new Date();
-          userDateTime = dateObj.toLocaleString();
-          userUuid = dateObj.UTC();
+          window.userDateTime = dateObj.toLocaleString();
 
 
         }
@@ -95,7 +97,7 @@
         // onSuccess Geolocation
         //
         function onSuccess(position) {
-          userLocation = {
+          window.userLocation = {
             "lat"   : position.coords.latitude,
             "lng"   : position.coords.longitude
           };
@@ -228,6 +230,7 @@
         var serverURL = "http://192.168.1.7:8289"
 
           upload = function (imageURI) {
+            console.log("comment: " + window.userComment);
             
             console.log("UPLOAD FTW");
               var ft = new FileTransfer(),
@@ -238,16 +241,15 @@
             options.mimeType = "image/jpeg";
             options.chunkedMode = false;
             options.params = { // Whatever you populate options.params with, will be available in req.body at the server-side.
-                "userdatetime" : userDateTime,
-                "userfbid"     : userFbId,
-                "useruuid"     : userUuid,
-                "userlocation" : userLocation,
-                "usercomment"  : userComment
+                "userdatetime" : window.userDateTime,
+                "userfbid"     : window.userFbId,
+                "userlocation" : window.userLocation,
+                "usercomment"  : window.userComment
             };
 
             ft.upload(imageURI, serverURL + "/images",
                 function (e) {
-                    getFeed();
+                  alert("Murdlet Submitted, Head over to comemurder.me to check it out!");
                 },
                 function (e) {
                     alert("Upload failed");
@@ -282,7 +284,7 @@
               console.log(JSON.stringify(data));
               document.getElementById("userName").innerHTML = data.name;
               document.getElementById("userPic").src = 'http://graph.facebook.com/' + data.id + '/picture?type=small';
-              userFbId = data.id;
+              window.userFbId = data.id;
             },
             error: errorHandler});
         }
@@ -318,10 +320,12 @@
           alert(error.message);
         }
 
-          $("#four").on("pageshow" , function() {
-            userComment = $("#textarea").text();
+$(document).on('pagecreate', function() {
+      $("#usertextarea").on('change', function() {
+          window.userComment = this.value;
+      })
+});
 
-          });
 
     </script>
 
@@ -346,15 +350,13 @@
           <!-- TODO https://developers.facebook.com/docs/facebook-login/permissions/v2.5 -->
           <br><br>
           <h1>PhoneGap</h1>
-          <p class="event listening">Connecting to Device</p>
-          <p class="event received">Device is Ready</p>
           <button class="btn btn-block" onclick="login()">Login with Facebook</button>
           <hr/>
-
           <button class="btn btn-block" onclick="getInfo()">Get My Info</button>
           <p>Name: <span id="userName"></span></p>
           <img id="userPic"/>
           <hr/>
+          <!--
 
           <p>Complete Facebook Logout. After logging out, you'll have to login again and provide your Facebook credentials.</p>
           <button class="btn btn-block" onclick="logout()">Logout</button>
@@ -364,23 +366,20 @@
 
           <p>Revoke App Permissions. After revoking permissions, you'll have to grant permissions again when logging in.</p>
           <button class="btn btn-block" onclick="revoke()">Revoke Permissions</button>
+          -->
           <a href="#three" data-role="button" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-theme="c" class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-c"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">Next</span></span></a>
         </div>
 
         <div id="three" data-role="page" class="page-content">
           <br><br>
           <h1>PhoneGap</h1>
-          <p class="event listening">Connecting to Device</p>
-          <p class="event received">Device is Ready</p>
           <p>Add an optional comment </p>
-          <textarea id="textarea" maxlength="140"></textarea>
+          <textarea id="usertextarea" maxlength="140"></textarea>
           <a href="#four" data-role="button" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-theme="c" class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-c"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">Next</span></span></a>
         </div>
 
         <div id="four" data-role="page" class="page-content">
           <br><br>
-          <p class="event listening">Connecting to Device</p>
-          <p class="event received">Device is Ready</p> 
           <button onclick="capturePhotoWithData();">Capture Photo With Image Data</button> <br>
           <!-- button onclick="capturePhotoWithFile();">Capture Photo With Image File URI</button> <br> 
           //TODO take out the corresponding function here.-->
