@@ -1,0 +1,18 @@
+{
+    "name": "pictogram",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+        "start": "node server.js"
+    },
+    "dependencies": {
+        "mongodb": "",
+        "express": "~3.0.0",
+
+        "express-logger": "*",
+
+        "method-override":"*",
+
+        "body-parser":"*"
+    }
+}
