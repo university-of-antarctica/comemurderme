@@ -14,7 +14,7 @@ var facebooker = function(){
 
 
   function Setup(callback){
-    SetCallback(_test_id);
+    SetCallback(_app_id);
     _callback = callback;
     LoadSDK();
   }

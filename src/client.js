@@ -11,7 +11,9 @@ var AddFacebookLogin = function(){
 }
 
 var CreateUI = function(murdlets){
-  $("body").css("margin-left","50px");
+  $("body").css("margin-left","50px")
+    .css("background-image","url(http://www.backgroundlabs.com/files/vampire-fangs-pattern-1437.png)")
+     .css("background-repeat","repeat")
   murdlets.forEach(function(murdlet){
     $("body").append(client_murdlets.BuildPage(murdlet));
   })
@@ -22,7 +24,10 @@ var CreateCarousel = function(murdlets){
     murdlets.forEach(function(murdlet,index){
       $div.append(client_murdlets.BuildPage(murdlet));
     })
-    $("body").append($div);
+    $("body")
+    .css("background-image","url(http://www.backgroundlabs.com/files/vampire-fangs-pattern-1437.png)")
+     .css("background-repeat","repeat")
+     .append($div);
     // setTimeout(function(){
       $div.children().hide();
       CycleThroughMurdlets($div);
