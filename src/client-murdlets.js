@@ -6,7 +6,8 @@ var client_murdlets = function(facebooker){
     return $("<div>")
       .attr("class","well")
       .width("580px")
-      .css("background-color","wheat")
+      .css("background-color","#181818")
+      .css("color","#800000")
       // .attr("class","col-md-12")
       // .css("height","500px")
       .css("border-style","outset")
@@ -42,6 +43,7 @@ var client_murdlets = function(facebooker){
   var BuildHeader = function(name, time){
     return $("<div>")
       .css("width","540px")
+      .css("font-family","Nosifer")
       // .css("height","80px")
       .append(
         BuildName(name)
@@ -92,23 +94,42 @@ var client_murdlets = function(facebooker){
 
   var BuildCommentBox = function(fid, comment){
     var url = facebooker.GetProfilePicture(fid);
+    var blood_url = "http://www.clker.com/cliparts/K/h/M/Q/u/c/blood-splatter-hi.png";
     return $("<div>")
       // .attr("class","col-md-12")
       // .width("800px")
       // .height("150px")
       .append(
-        $("<img>")
-          .attr("src",url)
+        $("<div>")
           .css("float","left")
-      )
-      .append(
-        BuildComment(comment)
-      );
+          .append(
+            $("<img>")
+              .attr("src",url)
+              .width("100px")
+              .height("100px")
+              // .css("position","absolute")
+              .css("float","left")
+
+            )
+            .append(
+              $("<img>")
+                .attr("src",blood_url)
+                .width("100px")
+                .height("100px")
+                .css("position","absolute")
+                .css("left","15px")
+            )
+          )
+        .append(
+          BuildComment(comment)
+        );
   }
   var BuildComment = function(comment){
     return $("<p>")
       .text("\"" + comment + "\"")
-      .css("font-style","italic");
+      // .css("font-style","italic")
+      .css("font-size","x-large")
+      .css("font-family","Special Elite")
   }
 
   var BuildClearfix = function(){
