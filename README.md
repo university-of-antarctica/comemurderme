@@ -1,10 +1,11 @@
 # ComeMurderMe
+## Project submitted for the 2015 HackNC
 
 The developers at University of Antarctica have delivered on perhaps their
 most unique endeavor to date, comemurderme. Comenmurderme is a one of a kind 
 app as well as a many of a kind app. 
 
-1. It is unique in that it is the first app ever made for vampires by humans for humans. 
+1. It is unique in that it is the first app ever made for vampires by humans for (consuming) humans. 
 2. It is both an iOS/Android app as well as a web site utilizing phonegap, HTML, CSS, JavaScript, Node, Redis, Nginx, and Express.js
 
 ## The Intent
